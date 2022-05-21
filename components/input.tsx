@@ -38,7 +38,7 @@ export default function InputForBcard() {
         10,
         40
       );
-      doc.save(`${name_kor}.pdf`);
+      doc.save(`${name_kor}_명함.pdf`);
     }
     pdfCard();
   };
