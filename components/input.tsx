@@ -29,14 +29,14 @@ export default function InputForBcard() {
       doc.addImage("./bcardImg.png", "png", 0, 0, 94, 54);
 
       doc.setPage(2);
-      doc.text(name_kor, 10, 5);
-      doc.text(name_eng, 10, 10);
-      doc.text(rnrName, 10, 15);
-      doc.text(`${email}@modulabs.co.kr`, 10, 20);
+      doc.text(name_kor, 10, 10);
+      doc.text(name_eng, 10, 20);
+      doc.text(rnrName, 10, 30);
+      doc.text(`${email}@modulabs.co.kr`, 10, 30);
       doc.text(
         `010 ${phoneFirst.toString()} ${phoneSecond.toString()}`,
         10,
-        35
+        40
       );
       doc.save(`${name_kor}.pdf`);
     }
@@ -75,7 +75,7 @@ export default function InputForBcard() {
           required: true,
         })}
         type="text"
-        placeholder="email"
+        placeholder="email(@modulabs.co.kr 제외)"
       />
       <input
         className={inputClass}
