@@ -11,28 +11,23 @@ interface IFromProps {
   lastName_eng: string;
   rnrName: string;
   email: string;
-  phoneFirst: number;
-  phoneSecond: number;
+  phone: number;
 }
 
 export default function InputForBcard() {
   const { register, handleSubmit } = useForm<IFromProps>();
   const onValid = (data: IFromProps) => {
-    const {
-      name_kor,
-      firstName_eng,
-      lastName_eng,
-      rnrName,
-      email,
-      phoneFirst,
-      phoneSecond,
-    } = data;
+    const { name_kor, firstName_eng, lastName_eng, rnrName, email, phone } =
+      data;
 
     const address = {
       company: "(주)모두의연구소",
       korean: "서울시 강남구 역삼로 156, 2F",
       eng: "2F, 156 Yeoksam-ro, Gangnam-gu, Seoul",
     };
+
+    const norSize = 9;
+    const smSize = 6;
 
     function pdfCard() {
       const doc = new jsPDF({
@@ -65,22 +60,26 @@ export default function InputForBcard() {
       );
 
       doc.setFont("SpoqaHanSansNeo-Bold", "normal", 900);
-      doc.setFontSize(10);
-      doc.text(name_kor, 4.9, 8.85);
+      doc.setFontSize(norSize);
+      doc.text(name_kor, 6.7, 10.327);
 
-      doc.setFontSize(10);
-      doc.text(`${firstName_eng} ${lastName_eng}`, 36, 8.85);
+      doc.setFontSize(norSize);
+      doc.text(`${firstName_eng} ${lastName_eng}`, 38, 10.651);
 
-      doc.setFontSize(6);
-      doc.text(rnrName, 4.9, 21.5);
-
-      doc.setFont("SpoqaHanSansNeo-Regular", "normal", "normal");
-      doc.setFontSize(10);
-      doc.text(`010 ${phoneFirst} ${phoneSecond}`, 36, 15.444);
+      doc.setFontSize(smSize);
+      doc.text(rnrName, 7, 23.016);
 
       doc.setFont("SpoqaHanSansNeo-Regular", "normal", "normal");
-      doc.setFontSize(10);
-      doc.text(`${email}@modulabs.co.kr`, 36, 21.423);
+      doc.setFontSize(norSize);
+      doc.text(
+        `010 ${phone.toString().substr(0, 4)} ${phone.toString().substr(4)}`,
+        38,
+        17.273
+      );
+
+      doc.setFont("SpoqaHanSansNeo-Regular", "normal", "normal");
+      doc.setFontSize(norSize);
+      doc.text(`${email}@modulabs.co.kr`, 38, 23.251);
 
       /* doc.setFont("SpoqaHanSansNeo-Bold", "normal", 900);
       //doc.setFontType("bold");
@@ -97,25 +96,28 @@ export default function InputForBcard() {
     }
     pdfCard();
   };
-  const inputClass = "border border-black p-1.5 rounded-md";
+  const inputClass =
+    "border border-pink-400 p-1.5 rounded-md shadow-md focus:outline-none focus:ring focus:ring-1 focus:ring-pink-500 focus:border-pink-500";
   return (
     <form className="flex flex-col space-y-5" onSubmit={handleSubmit(onValid)}>
       <input
         className={inputClass}
         {...register("name_kor", {
           required: true,
+          pattern: /[ㄱ-ㅎ|가-힣]/,
         })}
         type="text"
-        placeholder="name korean"
+        placeholder="이름"
       />
       <div className="flex space-x-3">
         <input
           className={`${inputClass} w-1/2`}
           {...register("firstName_eng", {
             required: true,
+            pattern: /[A-Za-z]/,
           })}
           type="text"
-          placeholder="first name eng"
+          placeholder="이름(영문)"
         />
         <input
           className={`${inputClass} w-1/2`}
@@ -123,7 +125,7 @@ export default function InputForBcard() {
             required: true,
           })}
           type="text"
-          placeholder="Last name eng"
+          placeholder="성(영문)"
         />
       </div>
       <input
@@ -132,37 +134,35 @@ export default function InputForBcard() {
           required: true,
         })}
         type="text"
-        placeholder="rnr name"
+        placeholder="직책"
       />
-      <input
-        className={inputClass}
-        {...register("email", {
-          required: true,
-        })}
-        type="text"
-        placeholder="email(@modulabs.co.kr 제외)"
-      />
-      <div className="flex space-x-3">
+      <div className="space-x-3">
         <input
           className={`${inputClass} w-1/2`}
-          {...register("phoneFirst", {
+          {...register("email", {
             required: true,
+            pattern: /[A-Za-z]/,
           })}
-          type="number"
-          placeholder="phone first"
+          type="text"
+          placeholder="이메일"
         />
+        <span className="text-2xl">@modulabs.co.kr</span>
+      </div>
+      <div className="flex space-x-3">
+        <span className="flex items-center text-2xl">010</span>
         <input
-          className={`${inputClass} w-1/2`}
-          {...register("phoneSecond", {
+          className={`${inputClass} w-full`}
+          {...register("phone", {
             required: true,
+            maxLength: 8,
           })}
           type="number"
-          placeholder="phone second"
+          placeholder="전화번호"
         />
       </div>
       {/* <input type="submit" value="dkdk" /> */}
-      <button className="border w-full p-1.5 border-black rounded-md">
-        Create Bcard pdf file
+      <button className="shadow-md border w-full p-1.5 bg-gray-900 text-white font-bold hover:bg-pink-500 hover:transition hover:transition-color rounded-md">
+        명함 pdf 만들기
       </button>
     </form>
   );
